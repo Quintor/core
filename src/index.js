@@ -80,11 +80,17 @@ class DisciplCore {
    * @param {string} ssid.did - Did that makes the claim
    * @param {string} ssid.privkey - Private key to sign the claim
    * @param {object} data - Data to be claimed
+   * @param {object} attester - Did that is expected to attest the claim
    * @returns {Promise<string>}
    */
-  async claim (ssid, data) {
+  async claim (ssid, data, attester = null) {
     let connectorName = BaseConnector.getConnectorName(ssid.did)
     let connector = await this.getConnector(connectorName)
+
+    if (attester) {
+      return connector.claim(ssid.did, ssid.privkey, data, attester)
+    }
+
     return connector.claim(ssid.did, ssid.privkey, data)
   }
 
